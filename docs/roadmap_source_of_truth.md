@@ -488,10 +488,15 @@ This section tracks implemented work in the current repository snapshot.
 - [x] `apps/worker/tasks/duplicate_scan.py`
 - [x] `apps/worker/tasks/recommendation_refresh.py`
 
+- Implemented real Jellyfin auth bridge endpoints (`/auth/login`, `/auth/logout`, `/auth/me`) with bearer-token header handling and Jellyfin API calls.
+- Added API dependency wiring and typed auth schemas (`apps/api/deps.py`, `apps/api/schemas/*`) to start formalizing request/response contracts.
+- Upgraded Jellyfin client with retry/backoff behavior and normalized auth-related methods (`authenticate_user`, `get_current_user`, `logout`).
+- Updated system status DB reporting to surface configured DB URL instead of a fixed in-memory stub string.
+- Expanded API tests to cover auth-bridge flows with dependency overrides for deterministic, network-free validation.
+
 ### Remaining high-priority gaps
-- Replace stub auth endpoints with real Jellyfin auth/session bridge.
 - Connect services to persistent storage (SQLite first) instead of in-memory fixtures.
-- Add typed schemas/deps modules for API input/output contracts.
+- Expand typed schemas/deps modules beyond auth into all route groups.
 - Implement actual background execution wiring (scheduler + queue semantics).
 - Build real web dashboard data wiring and UX beyond scaffold pages.
 
