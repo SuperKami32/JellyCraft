@@ -434,18 +434,32 @@ Goal: premium experience.
 This section tracks implemented work in the current repository snapshot.
 
 ### Completed in this pass
-- Scaffolded Phase 1 backend app skeleton under `apps/api/`.
-- Added initial routes for health/config/system, auth, dashboard, and library intelligence endpoints.
-- Added domain-aligned service/engine scaffolding:
-  - `core/services/jellyfin_client.py`
-  - `core/services/library_service.py`
-  - `core/engines/metadata_score_engine.py`
-- Added temporary data layer scaffolding:
+- Expanded API surface to cover additional roadmap endpoints:
+  - Collections (`/collections`, `/collections/generate`, `/collections/refresh/{slug}`)
+  - Recommendations (`/recommendations/me`, `/recommendations/explain/{media_id}`, `/recommendations/rebuild`)
+  - Playback (`/playback/in-progress`, `/playback/history`, `/playback/pick-tonight`)
+  - Automation (`/automation/*` trigger endpoints)
+  - Webhooks (`/webhooks/jellyfin`, `/webhooks/test`)
+- Added first-pass recommendation + smart collection engines:
+  - `core/engines/recommendation_engine.py`
+  - `core/engines/smart_collection_engine.py`
+- Extended `LibraryService` with:
+  - collection generation support
+  - recommendation generation + explanation support
+  - playback history/in-progress methods
+  - richer in-memory fixture items
+- Added initial data scaffolding now present in repo:
   - `data/db.py`
   - `data/models/media_cache.py`
-- Added API smoke tests in `tests/test_api.py`.
+- Added worker scaffolding:
+  - `apps/worker/main.py`
+  - `apps/worker/scheduler.py`
+  - `apps/worker/tasks/*` placeholders
+- Added frontend scaffolding for the first sprint target files under `apps/web/*`.
+- Expanded API smoke tests to validate new route groups.
 
-### Roadmap checklist status (initial sprint backend)
+### Roadmap checklist status (first sprint target)
+#### Backend (10)
 - [x] `apps/api/main.py`
 - [x] `apps/api/config.py`
 - [x] `apps/api/routes/auth.py`
@@ -457,12 +471,29 @@ This section tracks implemented work in the current repository snapshot.
 - [x] `data/db.py`
 - [x] `data/models/media_cache.py`
 
-### Remaining from first sprint target
-- Frontend files in `apps/web/*`
-- Worker files in `apps/worker/*`
-- Real Jellyfin auth/session bridge and persistent DB integration.
+#### Frontend (8)
+- [x] `apps/web/app/page.tsx`
+- [x] `apps/web/app/dashboard/page.tsx`
+- [x] `apps/web/app/library/page.tsx`
+- [x] `apps/web/components/cards/MediaCard.tsx`
+- [x] `apps/web/components/cards/IssueCard.tsx`
+- [x] `apps/web/components/carousels/ContinueWatchingRow.tsx`
+- [x] `apps/web/lib/api-client.ts`
+- [x] `apps/web/lib/auth.ts`
 
----
+#### Worker (5)
+- [x] `apps/worker/main.py`
+- [x] `apps/worker/tasks/sync_library.py`
+- [x] `apps/worker/tasks/metadata_audit.py`
+- [x] `apps/worker/tasks/duplicate_scan.py`
+- [x] `apps/worker/tasks/recommendation_refresh.py`
+
+### Remaining high-priority gaps
+- Replace stub auth endpoints with real Jellyfin auth/session bridge.
+- Connect services to persistent storage (SQLite first) instead of in-memory fixtures.
+- Add typed schemas/deps modules for API input/output contracts.
+- Implement actual background execution wiring (scheduler + queue semantics).
+- Build real web dashboard data wiring and UX beyond scaffold pages.
 
 ## MVP Definition (Highest ROI)
 The minimal product that is still truly useful:
