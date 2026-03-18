@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from apps.api.config import get_settings
+from data.db import get_database_config
 from apps.api.routes import (
     auth,
     automation,
@@ -13,6 +14,7 @@ from apps.api.routes import (
 )
 
 settings = get_settings()
+db_config = get_database_config()
 app = FastAPI(title=settings.app_name, version=settings.app_version)
 
 app.include_router(auth.router)
@@ -44,5 +46,5 @@ def system_status() -> dict:
     return {
         "api": "online",
         "worker": "not-connected",
-        "db": "in-memory",
+        "db": db_config.url,
     }

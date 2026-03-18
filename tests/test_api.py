@@ -3,9 +3,28 @@ import pytest
 pytest.importorskip("fastapi")
 from fastapi.testclient import TestClient
 
+from apps.api.deps import get_jellyfin_client
 from apps.api.main import app
 
 
+class FakeJellyfinClient:
+    def authenticate_user(self, username: str, password: str) -> dict:
+        assert username == "demo"
+        assert password == "secret"
+        return {
+            "access_token": "token-123",
+            "user": {"id": "user-1", "name": "Demo User", "primary_image_tag": None},
+        }
+
+    def logout(self, token: str) -> None:
+        assert token == "token-123"
+
+    def get_current_user(self, token: str) -> dict:
+        assert token == "token-123"
+        return {"id": "user-1", "name": "Demo User", "primary_image_tag": None}
+
+
+app.dependency_overrides[get_jellyfin_client] = lambda: FakeJellyfinClient()
 client = TestClient(app)
 
 
@@ -62,3 +81,16 @@ def test_automation_and_webhook_endpoints() -> None:
     webhook_response = client.post("/webhooks/jellyfin", json={"type": "media.added"})
     assert webhook_response.status_code == 200
     assert webhook_response.json()["event_type"] == "media.added"
+
+
+def test_auth_bridge_endpoints() -> None:
+    login_response = client.post("/auth/login", json={"username": "demo", "password": "secret"})
+    assert login_response.status_code == 200
+    assert login_response.json()["access_token"] == "token-123"
+
+    me_response = client.get("/auth/me", headers={"Authorization": "Bearer token-123"})
+    assert me_response.status_code == 200
+    assert me_response.json()["id"] == "user-1"
+
+    logout_response = client.post("/auth/logout", headers={"Authorization": "Bearer token-123"})
+    assert logout_response.status_code == 200
