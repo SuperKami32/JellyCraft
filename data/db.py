@@ -1,15 +1,17 @@
-from dataclasses import dataclass, field
-from typing import Any
+from __future__ import annotations
+
+from dataclasses import dataclass
 
 
 @dataclass(slots=True)
-class InMemoryDB:
-    """Temporary repository abstraction until SQLite/Postgres is wired in."""
-
-    tables: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
-
-    def get_table(self, table_name: str) -> list[dict[str, Any]]:
-        return self.tables.setdefault(table_name, [])
+class DatabaseConfig:
+    url: str = "sqlite:///./jellycraft.db"
 
 
-db = InMemoryDB()
+def get_database_config() -> DatabaseConfig:
+    """Return current DB configuration placeholder.
+
+    This keeps DB concerns explicit until SQLAlchemy integration lands.
+    """
+
+    return DatabaseConfig()

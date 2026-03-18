@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Any
 
 
 @dataclass(slots=True)
@@ -16,5 +17,5 @@ class MediaCacheItem:
     has_subtitles: bool = False
     runtime_minutes: int | None = None
     is_duplicate: bool = False
+    is_watched: bool = False
     file_path: str | None = None
-    extras: dict[str, Any] = field(default_factory=dict)
