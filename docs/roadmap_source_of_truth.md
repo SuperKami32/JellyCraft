@@ -429,6 +429,41 @@ Goal: premium experience.
 
 ---
 
+## Progress Update — 2026-03-18
+
+This section tracks implemented work in the current repository snapshot.
+
+### Completed in this pass
+- Scaffolded Phase 1 backend app skeleton under `apps/api/`.
+- Added initial routes for health/config/system, auth, dashboard, and library intelligence endpoints.
+- Added domain-aligned service/engine scaffolding:
+  - `core/services/jellyfin_client.py`
+  - `core/services/library_service.py`
+  - `core/engines/metadata_score_engine.py`
+- Added temporary data layer scaffolding:
+  - `data/db.py`
+  - `data/models/media_cache.py`
+- Added API smoke tests in `tests/test_api.py`.
+
+### Roadmap checklist status (initial sprint backend)
+- [x] `apps/api/main.py`
+- [x] `apps/api/config.py`
+- [x] `apps/api/routes/auth.py`
+- [x] `apps/api/routes/dashboard.py`
+- [x] `apps/api/routes/library.py`
+- [x] `core/services/jellyfin_client.py`
+- [x] `core/services/library_service.py`
+- [x] `core/engines/metadata_score_engine.py`
+- [x] `data/db.py`
+- [x] `data/models/media_cache.py`
+
+### Remaining from first sprint target
+- Frontend files in `apps/web/*`
+- Worker files in `apps/worker/*`
+- Real Jellyfin auth/session bridge and persistent DB integration.
+
+---
+
 ## MVP Definition (Highest ROI)
 The minimal product that is still truly useful:
 - sign in with Jellyfin
